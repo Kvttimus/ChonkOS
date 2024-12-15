@@ -1,4 +1,4 @@
-org 0x7C00  ; sets offset starting at 0x7c00
+org 0x0 
 bits 16  ; tells assembler to emit 16 bit code (starting here for backwards compatability)
 
 %define ENDL 0x0D, 0x0A
@@ -6,7 +6,14 @@ bits 16  ; tells assembler to emit 16 bit code (starting here for backwards comp
 ; the "puts" instruction is above main so we have to add "jmp main" to ensure
 ; that the program starts at main and not at "puts"
 start:
-    jmp main
+    ; print msg
+    mov si, msg_hello
+    call puts
+
+.halt:
+    cli
+    hlt
+
 
 ; Prints a string to the screen
 ; Params:
@@ -15,6 +22,7 @@ puts:
     ; save registers we will modify
     push si 
     push ax 
+    push bx
 
 .loop:
     lodsb                         ; loads next char in AL register
@@ -28,32 +36,9 @@ puts:
     jmp .loop                     ; if not null, then loop again
 
 .done:
+    pop bx
     pop ax
     pop si
     ret 
 
-main:                             ; mark where code begins
-    ; set up data segments
-    mov ax, 0                     ; can't directly write to ds/es
-    mov ds, ax
-    mov es, ax
-
-    ; setup stack
-    mov ss, ax
-    mov sp, 0x7C00                ; stack grows downwards from where we are loaded in memory
-
-    ; print msg
-    mov si, msg_hello
-    call puts
-
-    hlt
-
-.halt:                            ; if CPU starts again, it will enter an infinite loop (maintain more control over the program)
-    jmp .halt
-
-
-msg_hello: db 'Hello World!', ENDL, 0
-
-; pad the program to 510 bytes (we will boot on 512 byte disk)
-times 510-($-$$) db 0             ; $-$$ gives out the length of the program so far, measured in bytes
-dw 0xAA55                         ; last 2 bytes of the program (bytes 511-512)
+msg_hello: db ' YAYAYAYAY FAT SUCCESSFUL', ENDL, 0
