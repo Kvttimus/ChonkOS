@@ -6,14 +6,17 @@
                 "${workspaceFolder}/**"
             ],
             "defines": [
-                "_cdecl"
+                "_cdecl=",
+                "__far=",
+                "__interrupt=",
+                "__attribute__(x)="
             ],
             "compilerPath": "/usr/bin/watcom/binl64/wcc",
             "cStandard": "c99",
             "cppStandard": "gnu++17",
             "intelliSenseMode": "linux-gcc-x64",
             "compilerArgs": [
-                "-4 -d3 -s -wx -ms -zl -zq "
+                "-0 -d3 -s -wx -ml -zl -zq "
             ]
         }
     ],
