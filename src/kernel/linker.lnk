@@ -1,0 +1,15 @@
+FORMAT DOS
+OPTION QUIET,
+       NODEFAULTLIBS,
+       START=entry,
+       VERBOSE
+# DGROUP (DATA, BSS, STACK) must stay within 64KiB, so keep its segments together at the end.
+# far data in between would count towards DGROUP's size.
+# _ENTRY first & STACK last, the memory allocator uses them to find where the kernel starts & ends
+ORDER
+    CLNAME CODE
+        SEGMENT _ENTRY
+    CLNAME FAR_DATA
+    CLNAME DATA
+    CLNAME BSS
+    CLNAME STACK
