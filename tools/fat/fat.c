@@ -200,7 +200,9 @@ int main(int argc, char** argv)
         return -5;
     }
 
-    uint8_t* buffer = (uint8_t*) malloc(fileEntry->Size + g_BootSector.BytesPerSector);
+    // readFile reads whole clusters, so leave room for the last cluster to be read in full
+    uint32_t clusterSize = g_BootSector.SectorsPerCluster * g_BootSector.BytesPerSector;
+    uint8_t* buffer = (uint8_t*) malloc(fileEntry->Size + clusterSize);
     if (!readFile(fileEntry, disk, buffer))
     {
         fprintf(stderr, "Could not read file %s! :(\n", argv[2]);

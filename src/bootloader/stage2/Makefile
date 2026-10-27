@@ -2,7 +2,7 @@ BUILD_DIR?=build/
 ASM?=nasm
 ASMFLAGS?=-f obj
 CC16?=/usr/bin/watcom/binl64/wcc  		# Integrate Watcom compiler into build
-CFLAGS16?=-4 -d3 -s -wx -ms -zl -zq 
+CFLAGS16?=-0 -d3 -s -wx -ms -zl -zq 	# -0 = generate 8086 instructions only
 LD16?=/usr/bin/watcom/binl64/wlink
 
 SOURCES_C=$(wildcard *.c)
@@ -30,4 +30,5 @@ always:
 	mkdir -p $(BUILD_DIR)/stage2/asm
 
 clean:
-	rm -f $(BUILD_DIR)/stage2.bin
+	rm -f $(BUILD_DIR)/stage2.bin $(BUILD_DIR)/stage2.map
+	rm -rf $(BUILD_DIR)/stage2

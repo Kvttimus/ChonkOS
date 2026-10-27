@@ -1,4 +1,5 @@
 bits 16
+cpu 8086
 
 section _ENTRY class=CODE
 
@@ -19,4 +20,12 @@ entry:
     call _cstart_
 
     cli
-    hlt
+.halt:
+    hlt                         ; an NMI can wake us up from hlt, so loop back
+    jmp .halt
+
+; a raw binary normally stops before the BSS segment (uninitialized globals), leaving that memory
+; full of garbage. putting this segment after it (see linker.lnk) forces the linker to write BSS
+; out as zeros, so stage1 loads it already zeroed like C expects
+section _IMAGEEND class=IMAGEEND
+    db 0
